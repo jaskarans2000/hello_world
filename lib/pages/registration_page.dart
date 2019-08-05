@@ -193,8 +193,10 @@ class _RegistrationState extends State<Registration> {
                   child: MaterialButton(
                     onPressed: () {
                       if(Formkey.currentState.validate()){
-                        auth.createUserWithEmailAndPassword(email: email, password: passwd);
-                        auth.signInWithEmailAndPassword(email: email, password: passwd);
+                        if(this.mounted)setState(() {
+                          auth.createUserWithEmailAndPassword(email: email, password: passwd);
+                          auth.signInWithEmailAndPassword(email: email, password: passwd);
+                        });
                         if(auth.currentUser() != null)
                       {Firestore.instance
                           .collection('Users')
@@ -207,7 +209,9 @@ class _RegistrationState extends State<Registration> {
                                      "Year":selectedyear,
                                      "Password":passwd}, merge: true);
                       }}
-                      Navigator.of(context).pop();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext c){
+                        return Home();
+                      }));
                     },
                     minWidth: 200.0,
                     height: 42.0,

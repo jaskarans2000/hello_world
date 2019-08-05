@@ -80,9 +80,13 @@ class _StudentLoginState extends State<StudentLogin> {
                     child: MaterialButton(
                       onPressed: () {
                         if(Formkey.currentState.validate()){
-                          auth.signInWithEmailAndPassword(email: email, password: password);
+                          if(this.mounted)setState(() {
+                            auth.signInWithEmailAndPassword(email: email, password: password);
+                          });
                           }
-                        Navigator.of(context).pop();
+                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext c){
+                          return Home();
+                        }));
                       },
                       minWidth: 200.0,
                       height: 42.0,

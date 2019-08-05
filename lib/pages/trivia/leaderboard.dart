@@ -42,10 +42,8 @@ class _LeaderBoardState extends State<LeaderBoard> {
 
    sort(List keys, List values) {
      for(int i=0;i<(keys!=null?keys.length:0);i++){
-       String email=keys[i];
-       int value=values[i];
        for (int j = 0; j < keys.length-i-1; j++)
-         if (values[j] > values[j+1])
+         if (values[j] < values[j+1])
          {
            int temp=values[j];
            values[j]=values[j+1];

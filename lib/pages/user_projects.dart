@@ -32,17 +32,15 @@ class _UserProjectsState extends State<UserProjects> {
           stream: Firestore.instance.collection("Projects").snapshots(),
           builder: (BuildContext c,stream){
             if(stream?.data!=null){
-              QuerySnapshot querySnapshot=stream.data;
-              List<DocumentSnapshot> documentSnapshotList=querySnapshot.documents;
-              DocumentSnapshot documentSnapshot=documentSnapshotList[0];
-              print(documentSnapshot.documentID);
-              return OrientationBuilder(builder: (context,orientation){
+              QuerySnapshot querySnapshot=stream?.data;
+              List<DocumentSnapshot> documentSnapshotList=querySnapshot?.documents;
+              return OrientationBuilder(builder: (BuildContext context,Orientation orientation){
                 return GridView.count(
                   scrollDirection: Axis.vertical,
                   crossAxisCount: orientation==Orientation.portrait?2:3,
                   crossAxisSpacing: 2.0,
                   mainAxisSpacing: 2.0,
-                  children: List.generate(documentSnapshotList.length, (index){
+                  children: List.generate(documentSnapshotList?.length, (index){
                     return GestureDetector(
                       onTap:() {
                         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext c){

@@ -38,8 +38,6 @@ class _TeamProjectsState extends State<TeamProjects> {
             if(stream?.data!=null){
             QuerySnapshot querySnapshot=stream.data;
             List<DocumentSnapshot> documentSnapshotList=querySnapshot.documents;
-            DocumentSnapshot documentSnapshot=documentSnapshotList[0];
-            print(documentSnapshot.documentID);
             return OrientationBuilder(builder: (context,orientation){
               return GridView.count(
                 scrollDirection: Axis.vertical,
