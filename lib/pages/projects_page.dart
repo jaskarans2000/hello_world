@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helloworldofficial/pages/registration_page.dart';
 import 'package:helloworldofficial/pages/studentlogin_page.dart';
-import 'teamlogin_page.dart';
 
 class Projects extends StatefulWidget {
   static String id = 'projects_page';
@@ -51,7 +50,9 @@ class _ProjectsState extends State<Projects> {
                   borderRadius: BorderRadius.circular(30.0),
                   child: MaterialButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, StudentLogin.id);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext c){
+                        return StudentLogin();
+                      }));
                     },
                     minWidth: 200.0,
                     height: 42.0,
@@ -72,7 +73,9 @@ class _ProjectsState extends State<Projects> {
                   elevation: 5.0,
                   child: MaterialButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, Registration.id);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext c){
+                        return Registration();
+                      }));
                     },
                     minWidth: 200.0,
                     height: 42.0,

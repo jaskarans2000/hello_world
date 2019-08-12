@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:helloworldofficial/pages/submissions.dart';
-
 import 'add_project.dart';
 
 class TeamProjects extends StatefulWidget {
@@ -48,9 +46,9 @@ class _TeamProjectsState extends State<TeamProjects> {
                   return GestureDetector(
                     onTap: (){
                       DocumentSnapshot documentSnapshot=documentSnapshotList[index];
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext c){
+                      documentSnapshot.documentID!=null?Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext c){
                         return Submissions(documentSnapshot.documentID);
-                      }));
+                      })):{};
                     },
                     child: Container(
                       decoration: BoxDecoration(

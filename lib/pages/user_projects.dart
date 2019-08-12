@@ -43,8 +43,9 @@ class _UserProjectsState extends State<UserProjects> {
                   children: List.generate(documentSnapshotList?.length, (index){
                     return GestureDetector(
                       onTap:() {
+                        print("${documentSnapshotList[index].data}");
                         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext c){
-                          return  ProjectExplained(documentSnapshotList[index].documentID,documentSnapshotList[index].data);
+                          return  ProjectExplained(documentSnapshotList[index].documentID,documentSnapshotList[index].data["Mentor"],documentSnapshotList[index].data["Description"]);
                         }));
                        },
                       child: Container(

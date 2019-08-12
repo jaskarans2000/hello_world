@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Submissions extends StatefulWidget {
   String documentSnapshot;
@@ -13,6 +14,13 @@ class Submissions extends StatefulWidget {
 class _SubmissionsState extends State<Submissions> {
   Stream<QuerySnapshot> streamSubscription;
 
+  Future _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -36,21 +44,30 @@ class _SubmissionsState extends State<Submissions> {
           if(stream?.data!=null){
             QuerySnapshot querySnapshot=stream.data;
             List<DocumentSnapshot> documentSnapshotList=querySnapshot.documents;
-            print(documentSnapshotList[0].data);
             return ListView.builder(
                 itemCount: documentSnapshotList.length,
                 itemBuilder: (BuildContext c,int position){
               return ListTile(
-                title: Text("${documentSnapshotList[position].documentID}: ${documentSnapshotList[position].data["github"]}"),
+                title: Text("${documentSnapshotList[position].documentID} ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.0),),
+                subtitle: GestureDetector(
+                    onTap:()=> _launchURL(documentSnapshotList[position].data["github"]),
+                    child: Text("${documentSnapshotList[position].data["github"]}",style: TextStyle(color: Colors.blue),)) ,
               );
             });
           }else{
-            return Container(height: 0.0,width: 0.0,);
+            return Container(
+              child: Center(
+                child: Text("No submissions yet!",
+                  style: TextStyle(color:Colors.black,fontSize: 20.0,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+              ),
+            );
           }
           }
       ):Container(
-        child: Text("No submissions yet!",
-          style: TextStyle(color: Colors.white,fontSize: 20.0,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+        child: Center(
+          child: Text("No submissions yet!",
+            style: TextStyle(color:Colors.black,fontSize: 20.0,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+        ),
       ),
     );
   }

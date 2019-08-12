@@ -1,30 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
+import '../main.dart';
 
 class ProjectExplained extends StatefulWidget {
   String title;
-  Map<String,dynamic> map;
+  String mentor;
+  String description;
 
-  ProjectExplained(this.title,this.map);
+  ProjectExplained(this.title,this.mentor,this.description);
 
   @override
   _ProjectExplainedState createState() => _ProjectExplainedState();
 }
 
 class _ProjectExplainedState extends State<ProjectExplained> {
-  String mentor="";
-  String description="";
-  FirebaseUser user;
-  FirebaseAuth auth=FirebaseAuth.instance;
+
   TextEditingController controller=TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    mentor=widget.map["mentor"];
-    description=widget.map["description"];
-    getUser();
   }
 
   @override
@@ -36,13 +32,13 @@ class _ProjectExplainedState extends State<ProjectExplained> {
           fontFamily: 'ButterflyKids',
         ),),backgroundColor: Colors.black,
       ),
-      body: SingleChildScrollView(
+      body:widget.mentor!=null? SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("Mentor: $mentor\n\nDescription: $description",style: TextStyle(fontSize: 20.0),),
+              child: Text("Mentor: ${widget.mentor}\n\nDescription: ${widget.description}",style: TextStyle(fontSize: 20.0),),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -71,11 +67,7 @@ class _ProjectExplainedState extends State<ProjectExplained> {
 
           ],
         ),
-      ),
+      ):Container(height: 0.0,width: 0.0,),
     );
   }
-
-   getUser() async{
-    user=await auth.currentUser();
-   }
 }

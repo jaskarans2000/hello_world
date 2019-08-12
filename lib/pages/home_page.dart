@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helloworldofficial/pages/projects_page.dart';
 import 'package:helloworldofficial/pages/contests_page.dart';
@@ -5,7 +6,7 @@ import 'package:helloworldofficial/pages/team_project.dart';
 import 'package:helloworldofficial/pages/trivia/trivia_intro.dart';
 import 'package:helloworldofficial/pages/user_projects.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import '../main.dart';
 
 class Home extends StatefulWidget {
   static String id = 'home_page';
@@ -14,8 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  FirebaseAuth auth=FirebaseAuth.instance;
-  FirebaseUser user;
+
   Future _launchURL() async {
     const url = 'https://flutter.dev';
     if (await canLaunch(url)) {
@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    getUser();
+    user?.reload();
   }
 
   @override
@@ -55,29 +55,20 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Image.asset(
-                'images/hwlogo.jpeg',
-                fit: BoxFit.contain,
-                height: 100.0,
-              ),
-              SizedBox(
-                width: 20.0,
-              ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  'helloWorld',
-                  style: TextStyle(
-                    fontSize: 40.0,
-                    fontFamily: 'ButterflyKids',
-                  ),
-                ),
-              )
-            ],
+          title: Text(
+            'helloWorld',
+            style: TextStyle(
+              fontSize: 40.0,
+              fontFamily: 'ButterflyKids',
+            ),
           ),
+          actions: <Widget>[
+           user!=null? MaterialButton(
+                child: Text("Logout",style: TextStyle(color: Colors.white),),
+                onPressed: (){
+                  signout();
+                }):Container(height: 0.0,width: 0.0,)
+          ],
         ),
         body: Container(
           decoration: BoxDecoration(
@@ -840,10 +831,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-   getUser() async{
-    user=await auth.currentUser();
-   }
-
   Future<bool> backPressed() {
    return showDialog(
         context: context,
@@ -853,13 +840,19 @@ class _HomeState extends State<Home> {
           actions: <Widget>[
             FlatButton(onPressed:()=> Navigator.pop(context,false), child: Text("No")),
             FlatButton(onPressed: (){
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                  builder: (context)=>Home()
-                  ,settings: RouteSettings(name: "/main"))
-                  , (Route<dynamic> route) => false);
               Navigator.pop(context,true);
             }, child: Text("Yes"))
           ],
         ));
   }
+
+   signout() async{
+     setState(() {
+       auth.signOut();
+     });
+     FirebaseUser u=await auth.currentUser();
+     setState(() {
+       user=u;
+     });
+   }
 }

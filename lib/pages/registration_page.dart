@@ -1,12 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helloworldofficial/Model/student.dart';
-import 'package:helloworldofficial/constants.dart';
-import 'package:helloworldofficial/pages/trivia/trivia_intro.dart';
+import '../main.dart';
 import 'home_page.dart';
-import 'studentlogin_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 
 class Registration extends StatefulWidget {
   static String id = 'registration_page';
@@ -19,7 +17,6 @@ class _RegistrationState extends State<Registration> {
   final GlobalKey<FormState> Formkey=GlobalKey<FormState>();
   List<String> year=["First","Second","Third","Fourth"];
   List<String> stream=["CSE","ECE","IT","Other"];
-  FirebaseAuth auth=FirebaseAuth.instance;
   Student student=Student();
   String name;
   String username;
@@ -198,7 +195,9 @@ class _RegistrationState extends State<Registration> {
                           auth.signInWithEmailAndPassword(email: email, password: passwd);
                         });
                         if(auth.currentUser() != null)
-                      {Firestore.instance
+                      {
+                        getuser();
+                        Firestore.instance
                           .collection('Users')
                           .document("${email}")
                           .setData( {"Name":name,
@@ -209,7 +208,7 @@ class _RegistrationState extends State<Registration> {
                                      "Year":selectedyear,
                                      "Password":passwd}, merge: true);
                       }}
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext c){
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext c){
                         return Home();
                       }));
                     },
@@ -230,4 +229,12 @@ class _RegistrationState extends State<Registration> {
       ),
     );
   }
+
+   getuser() async{
+    FirebaseUser u;
+    u=await auth.currentUser();
+    setState(() {
+      user=u;
+    });
+   }
 }

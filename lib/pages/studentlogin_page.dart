@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:helloworldofficial/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:helloworldofficial/pages/trivia/trivia_intro.dart';
-
+import 'package:flutter/material.dart';
+import '../main.dart';
 import 'home_page.dart';
 
 class StudentLogin extends StatefulWidget {
@@ -12,7 +11,7 @@ class StudentLogin extends StatefulWidget {
 }
 
 class _StudentLoginState extends State<StudentLogin> {
-  FirebaseAuth auth=FirebaseAuth.instance;
+
   final GlobalKey<FormState> Formkey=GlobalKey<FormState>();
   String email;
   String password;
@@ -45,11 +44,16 @@ class _StudentLoginState extends State<StudentLogin> {
                             gapPadding: 3.3
                         )
                     ),
-                    validator: (value){
-                      if(value.isEmpty ){
-                        return "Please enter valid email";}
-                      else{
-                        email=value;}
+                    validator: (val){
+                      Pattern pattern =
+                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                      RegExp regex = new RegExp(pattern);
+                      if (val.isEmpty ||
+                          val == " " ||
+                          val.length < 5 ||
+                          !regex.hasMatch(val)) {
+                        return "Enter Valid Email Address";
+                      }
                     },
                   ),
                 ),
@@ -63,6 +67,7 @@ class _StudentLoginState extends State<StudentLogin> {
                             gapPadding: 3.3
                         )
                     ),
+                    obscureText: true,
                     validator: (value){
                       if(value.isEmpty ){
                         return "Please enter valid password";}
@@ -80,11 +85,13 @@ class _StudentLoginState extends State<StudentLogin> {
                     child: MaterialButton(
                       onPressed: () {
                         if(Formkey.currentState.validate()){
+                          if(Firestore.instance.collection("Users").document(email)!=null)
                           if(this.mounted)setState(() {
                             auth.signInWithEmailAndPassword(email: email, password: password);
                           });
                           }
-                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext c){
+                        getUSer();
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext c){
                           return Home();
                         }));
                       },
@@ -105,4 +112,11 @@ class _StudentLoginState extends State<StudentLogin> {
       ),
     );
   }
+
+   getUSer() async{
+    FirebaseUser u=await auth.currentUser();
+    setState(() {
+      user=u;
+    });
+   }
 }
